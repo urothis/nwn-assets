@@ -9,9 +9,3 @@ RUN ./nwn_key_unpack /nwn/data/data/nwn_base.key /extracted && updatedb
 RUN wget https://github.com/digitalocean/doctl/releases/download/v1.54.0/doctl-1.54.0-linux-amd64.tar.gz && \
   tar xf doctl-1.54.0-linux-amd64.tar.gz && \
   mv ./doctl /usr/local/bin
-
-WORKDIR /extracted
-RUN mkdir NSS && mkdir 2DA
-RUN find . -type f -name "*.nss" -exec echo {} ./NSS/ \;
-
-RUN doctl
