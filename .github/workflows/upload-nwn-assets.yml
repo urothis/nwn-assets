@@ -15,4 +15,7 @@ jobs:
 
       - name: clone files
         uses: docker://urothis/nwn-assets:latest
-        run: cp -r /extracted $GITHUB_WORKSPACE
+
+      - name: testing
+        run: ls
+          ls extracted
