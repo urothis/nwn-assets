@@ -15,6 +15,6 @@ jobs:
 
       - uses: docker://urothis/nwn-assets:latest
       - name: pull latest nwn assets
-        run: ls .
+        run: |
+          ls .
           ls /
-          ls /extracted
