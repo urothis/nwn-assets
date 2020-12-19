@@ -18,3 +18,5 @@ jobs:
 
       - name: testing
         run: ls .
+          ls /
+          ls /extracted
