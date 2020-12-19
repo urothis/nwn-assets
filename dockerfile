@@ -10,6 +10,6 @@ RUN wget https://github.com/digitalocean/doctl/releases/download/v1.54.0/doctl-1
   tar xf doctl-1.54.0-linux-amd64.tar.gz && \
   mv ./doctl /usr/local/bin
 # replace the entrypoint file here, so CI is cleaner
-RUN echo '#!/bin/bash\nexit 0' >> entrypoint.sh && \
+RUN echo '#!/bin/bash\nls' >> entrypoint.sh && \
   chmod +x entrypoint.sh
 ENTRYPOINT [ "./entrypoint.sh" ]
