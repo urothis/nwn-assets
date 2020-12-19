@@ -14,7 +14,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: pull latest nwn assets
         run: |
-          cp -R /extracted /github/key-file
-      - uses: EndBug/add-and-commit@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          cp -R /extracted/ /github/key-file/
+      - uses: stefanzweifel/git-auto-commit-action@v4
