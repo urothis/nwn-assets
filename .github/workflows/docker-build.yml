@@ -42,6 +42,3 @@ jobs:
           file: ./dockerfile
           push: true
           tags: urothis/nwn-assets:latest
-
-      - name: Image digest
-        run: echo ${ { steps.docker_build.outputs.digest } }
