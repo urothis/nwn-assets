@@ -8,7 +8,8 @@ RUN ./nwn_key_unpack /nwn/data/data/nwn_base.key /extracted && updatedb
 # digital ocean tools
 RUN wget https://github.com/digitalocean/doctl/releases/download/v1.54.0/doctl-1.54.0-linux-amd64.tar.gz && \
   tar xf doctl-1.54.0-linux-amd64.tar.gz && \
-  mv ./doctl /usr/local/bin && \
-  echo -e "#!/bin/bash\nexit 0" >> entrypoint.sh && \
+  mv ./doctl /usr/local/bin
+# replace the entrypoint file here, so CI is cleaner
+RUN echo -e "#!/bin/bash\nexit 0" >> entrypoint.sh && \
   chmod +x entrypoint.sh
 ENTRYPOINT [ "entrypoint.sh" ]
