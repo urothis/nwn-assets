@@ -8,12 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-
+    container:
+      image: docker://urothis/nwn-assets:latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - uses: docker://urothis/nwn-assets:latest
+      - uses: actions/checkout@v2
       - name: pull latest nwn assets
         run: |
           ls .
