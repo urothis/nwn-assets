@@ -15,4 +15,5 @@ jobs:
       - name: pull latest nwn assets
         run: |
           ls .
-          ls /
+          ls /extracted
+          ls /github
