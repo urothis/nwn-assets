@@ -1,4 +1,4 @@
-FROM beamdog/nwserver
+FROM beamdog/nwserver:8193.21
 RUN apt update && \
   apt install wget unzip git -y && \
   wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip && \
