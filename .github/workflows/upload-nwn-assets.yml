@@ -2,7 +2,7 @@ name: Upload-NWN-Assets
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 jobs:
