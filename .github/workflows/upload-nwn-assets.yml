@@ -14,5 +14,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: pull latest nwn assets
         run: |
-          cp -r /extracted/ ${GITHUB_WORKSPACE}/key-file/
+          cp -r /extracted/. ${GITHUB_WORKSPACE}/key-file/
       - uses: stefanzweifel/git-auto-commit-action@v4
