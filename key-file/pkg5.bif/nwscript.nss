@@ -8,13 +8,14 @@
 //
 ////////////////////////////////////////////////////////
 
-#define ENGINE_NUM_STRUCTURES   6
+#define ENGINE_NUM_STRUCTURES   7
 #define ENGINE_STRUCTURE_0      effect
 #define ENGINE_STRUCTURE_1      event
 #define ENGINE_STRUCTURE_2      location
 #define ENGINE_STRUCTURE_3      talent
 #define ENGINE_STRUCTURE_4      itemproperty
 #define ENGINE_STRUCTURE_5      sqlquery
+#define ENGINE_STRUCTURE_6      cassowary
 
 // Constants
 
@@ -5955,6 +5956,15 @@ int OBJECT_VISUAL_TRANSFORM_TRANSLATE_Y                  = 32;
 int OBJECT_VISUAL_TRANSFORM_TRANSLATE_Z                  = 33;
 int OBJECT_VISUAL_TRANSFORM_ANIMATION_SPEED              = 40;
 
+int OBJECT_VISUAL_TRANSFORM_LERP_NONE                    = 0; // 1
+int OBJECT_VISUAL_TRANSFORM_LERP_LINEAR                  = 1; // x
+int OBJECT_VISUAL_TRANSFORM_LERP_SMOOTHSTEP              = 2; // x * x * (3 - 2 * x)
+int OBJECT_VISUAL_TRANSFORM_LERP_INVERSE_SMOOTHSTEP      = 3; // 0.5 - sin(asin(1.0 - 2.0 * x) / 3.0)
+int OBJECT_VISUAL_TRANSFORM_LERP_EASE_IN                 = 4; // (1 - cosf(x * M_PI * 0.5))
+int OBJECT_VISUAL_TRANSFORM_LERP_EASE_OUT                = 5; // sinf(x * M_PI * 0.5)
+int OBJECT_VISUAL_TRANSFORM_LERP_QUADRATIC               = 6; // x * x
+int OBJECT_VISUAL_TRANSFORM_LERP_SMOOTHERSTEP            = 7; // (x * x * x * (x * (6.0 * x - 15.0) + 10.0))
+
 int VIBRATOR_MOTOR_ANY                                   = 0;
 int VIBRATOR_MOTOR_LEFT                                  = 1;
 int VIBRATOR_MOTOR_RIGHT                                 = 2;
@@ -6051,6 +6061,11 @@ int MOUSECURSOR_CUSTOM_00                                = 93;  // gui_mp_custom
 int MOUSECURSOR_CUSTOM_00_DOWN                           = 94;  // gui_mp_custom00d
 int MOUSECURSOR_CUSTOM_99                                = 291; // gui_mp_custom99u
 int MOUSECURSOR_CUSTOM_99_DOWN                           = 292; // gui_mp_custom99d
+
+float CASSOWARY_STRENGTH_WEAK                            = 1.0;
+float CASSOWARY_STRENGTH_MEDIUM                          = 1000.0;
+float CASSOWARY_STRENGTH_STRONG                          = 1000000.0;
+float CASSOWARY_STRENGTH_REQUIRED                        = 1001001000.0;
 
 string sLanguage = "nwscript";
 
@@ -11316,14 +11331,14 @@ int SetEventScript(object oObject, int nHandler, string sScript);
 // - oObject can be any valid Creature, Placeable, Item or Door.
 // - nTransform is one of OBJECT_VISUAL_TRANSFORM_*
 // Returns the current (or default) value.
-float GetObjectVisualTransform(object oObject, int nTransform);
+float GetObjectVisualTransform(object oObject, int nTransform, int bCurrentLerp = FALSE);
 
 // Sets a visual transform on the given object.
 // - oObject can be any valid Creature, Placeable, Item or Door.
 // - nTransform is one of OBJECT_VISUAL_TRANSFORM_*
 // - fValue depends on the transformation to apply.
 // Returns the old/previous value.
-float SetObjectVisualTransform(object oObject, int nTransform, float fValue);
+float SetObjectVisualTransform(object oObject, int nTransform, float fValue, int nLerpType = OBJECT_VISUAL_TRANSFORM_LERP_NONE, float fLerpDuration = 0.0, int bPauseWithGame = TRUE);
 
 // Sets an integer material shader uniform override.
 // - sMaterial needs to be a material on that object.
@@ -11540,6 +11555,7 @@ string SqlGetError(sqlquery sqlQuery);
 // N.B.: You can pass sqlqueries into DelayCommand; HOWEVER
 //       *** they will NOT survive a game save/load ***
 //       Any commands on a restored sqlquery will fail.
+// Please check the SQLite_README.txt file in lang/en/docs/ for the list of builtin functions.
 sqlquery SqlPrepareQueryCampaign(string sDatabase, string sQuery);
 
 // Sets up a query.
@@ -11558,6 +11574,7 @@ sqlquery SqlPrepareQueryCampaign(string sDatabase, string sQuery);
 // N.B.: You can pass sqlqueries into DelayCommand; HOWEVER
 //       *** they will NOT survive a game save/load ***
 //       Any commands on a restored sqlquery will fail.
+// Please check the SQLite_README.txt file in lang/en/docs/ for the list of builtin functions.
 sqlquery SqlPrepareQueryObject(object oObject, string sQuery);
 
 // Bind an integer to a named parameter of the given prepared query.
@@ -11636,3 +11653,103 @@ object StringToObject(string sHex);
 // * This is not considered a friendly or hostile combat action. It will not affect factions, nor will it trigger script events.
 // * This will not advise player parties in the combat log.
 void SetCurrentHitPoints(object oObject, int nHitPoints);
+
+// Returns the currently executing event (EVENT_SCRIPT_*) or 0 if not determinable.
+// Note: Will return 0 in DelayCommand/AssignCommand. ExecuteScript(Chunk) will inherit their event ID from their parent event.
+int GetCurrentlyRunningEvent();
+
+// Get the integer parameter of eEffect at nIndex.
+// * nIndex bounds: 0 >= nIndex < 8.
+// * Some experimentation will be needed to find the right index for the value you wish to determine.
+// Returns: the value or 0 on error/when not set.
+int GetEffectInteger(effect eEffect, int nIndex);
+
+// Get the float parameter of eEffect at nIndex.
+// * nIndex bounds: 0 >= nIndex < 4.
+// * Some experimentation will be needed to find the right index for the value you wish to determine.
+// Returns: the value or 0.0f on error/when not set.
+float GetEffectFloat(effect eEffect, int nIndex);
+
+// Get the string parameter of eEffect at nIndex.
+// * nIndex bounds: 0 >= nIndex < 6.
+// * Some experimentation will be needed to find the right index for the value you wish to determine.
+// Returns: the value or "" on error/when not set.
+string GetEffectString(effect eEffect, int nIndex);
+
+// Get the object parameter of eEffect at nIndex.
+// * nIndex bounds: 0 >= nIndex < 4.
+// * Some experimentation will be needed to find the right index for the value you wish to determine.
+// Returns: the value or OBJECT_INVALID on error/when not set.
+object GetEffectObject(effect eEffect, int nIndex);
+
+// Get the vector parameter of eEffect at nIndex.
+// * nIndex bounds: 0 >= nIndex < 2.
+// * Some experimentation will be needed to find the right index for the value you wish to determine.
+// Returns: the value or {0.0f, 0.0f, 0.0f} on error/when not set.
+vector GetEffectVector(effect eEffect, int nIndex);
+
+// Check if nBaseItemType fits in oTarget's inventory.
+// Note: Does not check inside any container items possessed by oTarget.
+// * nBaseItemType: a BASE_ITEM_* constant.
+// * oTarget: a valid creature, placeable or item.
+// Returns: TRUE if the baseitem type fits, FALSE if not or on error.
+int GetBaseItemFitsInInventory(int nBaseItemType, object oTarget);
+
+// Get oObject's local cassowary variable reference sVarName
+// * Return value on error: empty solver
+// * NB: cassowary types are references, same as objects.
+//   Unlike scalars such as int and string, solver references share the same data.
+//   Modifications made to one reference are reflected on others.
+cassowary GetLocalCassowary(object oObject, string sVarName);
+
+// Set a reference to the given solver on oObject.
+// * NB: cassowary types are references, same as objects.
+//   Unlike scalars such as int and string, solver references share the same data.
+//   Modifications made to one reference are reflected on others.
+void SetLocalCassowary(object oObject, string sVarName, cassowary cSolver);
+
+// Delete local solver reference.
+// * NB: cassowary types are references, same as objects.
+//   Unlike scalars such as int and string, solver references share the same data.
+//   Modifications made to one reference are reflected on others.
+void DeleteLocalCassowary(object oObject, string sVarName);
+
+// Clear out this solver, removing all state, constraints and suggestions.
+// This is provided as a convenience if you wish to reuse a cassowary variable.
+// It is not necessary to call this for solvers you simply want to let go out of scope.
+void CassowaryReset(cassowary cSolver);
+
+// Add a constraint to the system.
+// * The constraint needs to be a valid comparison equation, one of: >=, ==, <=.
+// * This implementation is a linear constraint solver.
+// * You cannot multiply or divide variables and expressions with each other.
+//   Doing so will result in a error when attempting to add the constraint.
+//   (You can, of course, multiply or divide by constants).
+// * fStrength must be >= CASSOWARY_STRENGTH_WEAK && <= CASSOWARY_STRENGTH_REQUIRED.
+// * Any referenced variables can be retrieved with CassowaryGetValue().
+// * Returns "" on success, or the parser/constraint system error message.
+string CassowaryConstrain(cassowary cSolver, string sConstraint, float fStrength = CASSOWARY_STRENGTH_REQUIRED);
+
+// Suggest a value to the solver.
+// * Edit variables are soft constraints and exist as an optimisation for complex systems.
+//   You can do the same with Constrain("v == 5", CASSOWARY_STRENGTH_xxx); but edit variables
+//   allow you to suggest values without having to rebuild the solver.
+// * fStrength must be >= CASSOWARY_STRENGTH_WEAK && < CASSOWARY_STRENGTH_REQUIRED
+//   Suggested values cannot be required, as suggesting a value must not invalidate the solver.
+void CassowarySuggestValue(cassowary cSolver, string sVarName, float fValue, float fStrength = CASSOWARY_STRENGTH_STRONG);
+
+// Get the value for the given variable, or 0.0 on error.
+float CassowaryGetValue(cassowary cSolver, string sVarName);
+
+// Gets a printable debug state of the given solver, which may help you debug
+// complex systems.
+string CassowaryDebug(cassowary cSolver);
+
+// Overrides a given strref to always return sValue instead of what is in the TLK file.
+// Setting sValue to "" will delete the override
+void SetTlkOverride(int nStrRef, string sValue="");
+
+// Constructs a custom itemproperty given all the parameters explicitly.
+// This function can be used in place of all the other ItemPropertyXxx constructors
+// Use GetItemProperty{Type,SubType,CostTableValue,Param1Value} to see the values for a given itemproperty.
+itemproperty ItemPropertyCustom(int nType, int nSubType=-1, int nCostTableValue=-1, int nParam1Value=-1);
