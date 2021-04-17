@@ -9046,8 +9046,10 @@ int GetDefensiveCastingMode(object oCreature);
 // * returns APPEARANCE_TYPE_INVALID for non creatures/invalid creatures
 int GetAppearanceType(object oCreature);
 
-// SpawnScriptDebugger() will cause the script debugger to be executed
-// after this command is executed!
+// SpawnScriptDebugger() will attempt to communicate with the a running script debugger
+// instance. You need to run it yourself, and enable it in Options/Config beforehand.
+// A sample debug server is included with the game installation in utils/.
+// Will only work in singleplayer, NOT on dedicated servers.
 // In order to compile the script for debugging go to Tools->Options->Script Editor
 // and check the box labeled "Generate Debug Information When Compiling Scripts"
 // After you have checked the above box, recompile the script that you want to debug.
