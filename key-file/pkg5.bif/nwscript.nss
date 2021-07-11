@@ -529,6 +529,8 @@ int EFFECT_TYPE_ETHEREAL                    = 81;
 int EFFECT_TYPE_SPELL_FAILURE               = 82;
 int EFFECT_TYPE_CUTSCENEGHOST               = 83;
 int EFFECT_TYPE_CUTSCENEIMMOBILIZE          = 84;
+int EFFECT_TYPE_RUNSCRIPT                   = 85;
+int EFFECT_TYPE_ICON                        = 86;
 
 int ITEM_APPR_TYPE_SIMPLE_MODEL         = 0;
 int ITEM_APPR_TYPE_WEAPON_COLOR         = 1;
@@ -6067,6 +6069,141 @@ float CASSOWARY_STRENGTH_MEDIUM                          = 1000.0;
 float CASSOWARY_STRENGTH_STRONG                          = 1000000.0;
 float CASSOWARY_STRENGTH_REQUIRED                        = 1001001000.0;
 
+int RUNSCRIPT_EFFECT_SCRIPT_TYPE_ON_APPLIED              = 1;
+int RUNSCRIPT_EFFECT_SCRIPT_TYPE_ON_REMOVED              = 2;
+int RUNSCRIPT_EFFECT_SCRIPT_TYPE_ON_INTERVAL             = 3;
+
+int EFFECT_ICON_INVALID                             = 0;
+int EFFECT_ICON_DAMAGE_RESISTANCE                   = 1;
+int EFFECT_ICON_REGENERATE                          = 2;
+int EFFECT_ICON_DAMAGE_REDUCTION                    = 3;
+int EFFECT_ICON_TEMPORARY_HITPOINTS                 = 4;
+int EFFECT_ICON_ENTANGLE                            = 5;
+int EFFECT_ICON_INVULNERABLE                        = 6;
+int EFFECT_ICON_DEAF                                = 7;
+int EFFECT_ICON_FATIGUE                             = 8;
+int EFFECT_ICON_IMMUNITY                            = 9;
+int EFFECT_ICON_BLIND                               = 10;
+int EFFECT_ICON_ENEMY_ATTACK_BONUS                  = 11;
+int EFFECT_ICON_CHARMED                             = 12;
+int EFFECT_ICON_CONFUSED                            = 13;
+int EFFECT_ICON_FRIGHTENED                          = 14;
+int EFFECT_ICON_DOMINATED                           = 15;
+int EFFECT_ICON_PARALYZE                            = 16;
+int EFFECT_ICON_DAZED                               = 17;
+int EFFECT_ICON_STUNNED                             = 18;
+int EFFECT_ICON_SLEEP                               = 19;
+int EFFECT_ICON_POISON                              = 20;
+int EFFECT_ICON_DISEASE                             = 21;
+int EFFECT_ICON_CURSE                               = 22;
+int EFFECT_ICON_SILENCE                             = 23;
+int EFFECT_ICON_TURNED                              = 24;
+int EFFECT_ICON_HASTE                               = 25;
+int EFFECT_ICON_SLOW                                = 26;
+int EFFECT_ICON_ABILITY_INCREASE_STR                = 27;
+int EFFECT_ICON_ABILITY_DECREASE_STR                = 28;
+int EFFECT_ICON_ATTACK_INCREASE                     = 29;
+int EFFECT_ICON_ATTACK_DECREASE                     = 30;
+int EFFECT_ICON_DAMAGE_INCREASE                     = 31;
+int EFFECT_ICON_DAMAGE_DECREASE                     = 32;
+int EFFECT_ICON_DAMAGE_IMMUNITY_INCREASE            = 33;
+int EFFECT_ICON_DAMAGE_IMMUNITY_DECREASE            = 34;
+int EFFECT_ICON_AC_INCREASE                         = 35;
+int EFFECT_ICON_AC_DECREASE                         = 36;
+int EFFECT_ICON_MOVEMENT_SPEED_INCREASE             = 37;
+int EFFECT_ICON_MOVEMENT_SPEED_DECREASE             = 38;
+int EFFECT_ICON_SAVING_THROW_INCREASE               = 39;
+int EFFECT_ICON_SAVING_THROW_DECREASE               = 40;
+int EFFECT_ICON_SPELL_RESISTANCE_INCREASE           = 41;
+int EFFECT_ICON_SPELL_RESISTANCE_DECREASE           = 42;
+int EFFECT_ICON_SKILL_INCREASE                      = 43;
+int EFFECT_ICON_SKILL_DECREASE                      = 44;
+int EFFECT_ICON_INVISIBILITY                        = 45;
+int EFFECT_ICON_IMPROVEDINVISIBILITY                = 46;
+int EFFECT_ICON_DARKNESS                            = 47;
+int EFFECT_ICON_DISPELMAGICALL                      = 48;
+int EFFECT_ICON_ELEMENTALSHIELD                     = 49;
+int EFFECT_ICON_LEVELDRAIN                          = 50;
+int EFFECT_ICON_POLYMORPH                           = 51;
+int EFFECT_ICON_SANCTUARY                           = 52;
+int EFFECT_ICON_TRUESEEING                          = 53;
+int EFFECT_ICON_SEEINVISIBILITY                     = 54;
+int EFFECT_ICON_TIMESTOP                            = 55;
+int EFFECT_ICON_BLINDNESS                           = 56;
+int EFFECT_ICON_SPELLLEVELABSORPTION                = 57;
+int EFFECT_ICON_DISPELMAGICBEST                     = 58;
+int EFFECT_ICON_ABILITY_INCREASE_DEX                = 59;
+int EFFECT_ICON_ABILITY_DECREASE_DEX                = 60;
+int EFFECT_ICON_ABILITY_INCREASE_CON                = 61;
+int EFFECT_ICON_ABILITY_DECREASE_CON                = 62;
+int EFFECT_ICON_ABILITY_INCREASE_INT                = 63;
+int EFFECT_ICON_ABILITY_DECREASE_INT                = 64;
+int EFFECT_ICON_ABILITY_INCREASE_WIS                = 65;
+int EFFECT_ICON_ABILITY_DECREASE_WIS                = 66;
+int EFFECT_ICON_ABILITY_INCREASE_CHA                = 67;
+int EFFECT_ICON_ABILITY_DECREASE_CHA                = 68;
+int EFFECT_ICON_IMMUNITY_ALL                        = 69;
+int EFFECT_ICON_IMMUNITY_MIND                       = 70;
+int EFFECT_ICON_IMMUNITY_POISON                     = 71;
+int EFFECT_ICON_IMMUNITY_DISEASE                    = 72;
+int EFFECT_ICON_IMMUNITY_FEAR                       = 73;
+int EFFECT_ICON_IMMUNITY_TRAP                       = 74;
+int EFFECT_ICON_IMMUNITY_PARALYSIS                  = 75;
+int EFFECT_ICON_IMMUNITY_BLINDNESS                  = 76;
+int EFFECT_ICON_IMMUNITY_DEAFNESS                   = 77;
+int EFFECT_ICON_IMMUNITY_SLOW                       = 78;
+int EFFECT_ICON_IMMUNITY_ENTANGLE                   = 79;
+int EFFECT_ICON_IMMUNITY_SILENCE                    = 80;
+int EFFECT_ICON_IMMUNITY_STUN                       = 81;
+int EFFECT_ICON_IMMUNITY_SLEEP                      = 82;
+int EFFECT_ICON_IMMUNITY_CHARM                      = 83;
+int EFFECT_ICON_IMMUNITY_DOMINATE                   = 84;
+int EFFECT_ICON_IMMUNITY_CONFUSE                    = 85;
+int EFFECT_ICON_IMMUNITY_CURSE                      = 86;
+int EFFECT_ICON_IMMUNITY_DAZED                      = 87;
+int EFFECT_ICON_IMMUNITY_ABILITY_DECREASE           = 88;
+int EFFECT_ICON_IMMUNITY_ATTACK_DECREASE            = 89;
+int EFFECT_ICON_IMMUNITY_DAMAGE_DECREASE            = 90;
+int EFFECT_ICON_IMMUNITY_DAMAGE_IMMUNITY_DECREASE   = 91;
+int EFFECT_ICON_IMMUNITY_AC_DECREASE                = 92;
+int EFFECT_ICON_IMMUNITY_MOVEMENT_SPEED_DECREASE    = 93;
+int EFFECT_ICON_IMMUNITY_SAVING_THROW_DECREASE      = 94;
+int EFFECT_ICON_IMMUNITY_SPELL_RESISTANCE_DECREASE  = 95;
+int EFFECT_ICON_IMMUNITY_SKILL_DECREASE             = 96;
+int EFFECT_ICON_IMMUNITY_KNOCKDOWN                  = 97;
+int EFFECT_ICON_IMMUNITY_NEGATIVE_LEVEL             = 98;
+int EFFECT_ICON_IMMUNITY_SNEAK_ATTACK               = 99;
+int EFFECT_ICON_IMMUNITY_CRITICAL_HIT               = 100;
+int EFFECT_ICON_IMMUNITY_DEATH_MAGIC                = 101;
+int EFFECT_ICON_REFLEX_SAVE_INCREASED               = 102;
+int EFFECT_ICON_FORT_SAVE_INCREASED                 = 103;
+int EFFECT_ICON_WILL_SAVE_INCREASED                 = 104;
+int EFFECT_ICON_TAUNTED                             = 105;
+int EFFECT_ICON_SPELLIMMUNITY                       = 106;
+int EFFECT_ICON_ETHEREALNESS                        = 107;
+int EFFECT_ICON_CONCEALMENT                         = 108;
+int EFFECT_ICON_PETRIFIED                           = 109;
+int EFFECT_ICON_EFFECT_SPELL_FAILURE                = 110;
+int EFFECT_ICON_DAMAGE_IMMUNITY_MAGIC               = 111;
+int EFFECT_ICON_DAMAGE_IMMUNITY_ACID                = 112;
+int EFFECT_ICON_DAMAGE_IMMUNITY_COLD                = 113;
+int EFFECT_ICON_DAMAGE_IMMUNITY_DIVINE              = 114;
+int EFFECT_ICON_DAMAGE_IMMUNITY_ELECTRICAL          = 115;
+int EFFECT_ICON_DAMAGE_IMMUNITY_FIRE                = 116;
+int EFFECT_ICON_DAMAGE_IMMUNITY_NEGATIVE            = 117;
+int EFFECT_ICON_DAMAGE_IMMUNITY_POSITIVE            = 118;
+int EFFECT_ICON_DAMAGE_IMMUNITY_SONIC               = 119;
+int EFFECT_ICON_DAMAGE_IMMUNITY_MAGIC_DECREASE      = 120;
+int EFFECT_ICON_DAMAGE_IMMUNITY_ACID_DECREASE       = 121;
+int EFFECT_ICON_DAMAGE_IMMUNITY_COLD_DECREASE       = 122;
+int EFFECT_ICON_DAMAGE_IMMUNITY_DIVINE_DECREASE     = 123;
+int EFFECT_ICON_DAMAGE_IMMUNITY_ELECTRICAL_DECREASE = 124;
+int EFFECT_ICON_DAMAGE_IMMUNITY_FIRE_DECREASE       = 125;
+int EFFECT_ICON_DAMAGE_IMMUNITY_NEGATIVE_DECREASE   = 126;
+int EFFECT_ICON_DAMAGE_IMMUNITY_POSITIVE_DECREASE   = 127;
+int EFFECT_ICON_DAMAGE_IMMUNITY_SONIC_DECREASE      = 128;
+int EFFECT_ICON_WOUNDING                            = 129;
+
 string sLanguage = "nwscript";
 
 // Get an integer between 0 and nMaxInteger-1.
@@ -11143,7 +11280,7 @@ int GetItemPropertyDuration(itemproperty nProperty);
 // - Returns 0 if the duration type of the item property is not DURATION_TYPE_TEMPORARY.
 int GetItemPropertyDurationRemaining(itemproperty nProperty);
 
-// Instances a new area from the given resref, which needs to be a existing module area.
+// Instances a new area from the given sSourceResRef, which needs to be a existing module area.
 // Will optionally set a new area tag and displayed name. The new area is accessible
 // immediately, but initialisation scripts for the area and all contained creatures will only
 // run after the current script finishes (so you can clean up objects before returning).
@@ -11153,9 +11290,20 @@ int GetItemPropertyDurationRemaining(itemproperty nProperty);
 // Note: When spawning a second instance of a existing area, you will have to manually
 //       adjust all transitions (doors, triggers) with the relevant script commands,
 //       or players might end up in the wrong area.
-object CreateArea(string sResRef, string sNewTag = "", string sNewName = "");
+// Note: Areas cannot have duplicate ResRefs, so your new area will have a autogenerated,
+//       sequential resref starting with "nw_"; for example: nw_5. You cannot influence this resref.
+//       If you destroy an area, that resref will be come free for reuse for the next area created.
+//       If you need to know the resref of your new area, you can call GetResRef on it.
+// Note: When instancing an area from a loaded savegame, it will spawn the area as it was at time of save, NOT
+//       at module creation. This is because the savegame replaces the module data. Due to technical limitations,
+//       polymorphed creatures, personal reputation, and associates will currently fail to restore correctly.
+object CreateArea(string sSourceResRef, string sNewTag = "", string sNewName = "");
 
 // Destroys the given area object and everything in it.
+//
+// If the area is in a module, the .are and .git data is left behind and you can spawn from
+// it again. If the area is a temporary copy, the data will be deleted and you cannot spawn it again
+// via the resref.
 //
 // Return values:
 //    0: Object not an area or invalid.
@@ -11165,12 +11313,23 @@ object CreateArea(string sResRef, string sNewTag = "", string sNewName = "");
 int DestroyArea(object oArea);
 
 // Creates a copy of a existing area, including everything inside of it (except players).
+// Will optionally set a new area tag and displayed name. The new area is accessible
+// immediately, but initialisation scripts for the area and all contained creatures will only
+// run after the current script finishes (so you can clean up objects before returning).
+//
+// This is similar to CreateArea, except this variant will copy all changes made to the source
+// area since it has spawned. CreateArea() will instance the area from the .are and .git data
+// as it was at creation.
 //
 // Returns the new area, or OBJECT_INVALID on error.
 //
 // Note: You will have to manually adjust all transitions (doors, triggers) with the
 //       relevant script commands, or players might end up in the wrong area.
-object CopyArea(object oArea);
+// Note: Areas cannot have duplicate ResRefs, so your new area will have a autogenerated,
+//       sequential resref starting with "nw_"; for example: nw_5. You cannot influence this resref.
+//       If you destroy an area, that resref will be come free for reuse for the next area created.
+//       If you need to know the resref of your new area, you can call GetResRef on it.
+object CopyArea(object oArea, string sNewTag = "", string sNewName = "");
 
 // Returns the first area in the module.
 object GetFirstArea();
@@ -11657,8 +11816,13 @@ object StringToObject(string sHex);
 void SetCurrentHitPoints(object oObject, int nHitPoints);
 
 // Returns the currently executing event (EVENT_SCRIPT_*) or 0 if not determinable.
-// Note: Will return 0 in DelayCommand/AssignCommand. ExecuteScript(Chunk) will inherit their event ID from their parent event.
-int GetCurrentlyRunningEvent();
+// Note: Will return 0 in DelayCommand/AssignCommand.
+// * bInheritParent: If TRUE, ExecuteScript(Chunk) will inherit their event ID from their parent event.
+//                   If FALSE, it will return the event ID of the current script, which may be 0.
+//
+// Some events can run in the same script context as a previous event (for example: CreatureOnDeath, CreatureOnDamaged)
+// In cases like these calling the function with bInheritParent = TRUE will return the wrong event ID.
+int GetCurrentlyRunningEvent(int bInheritParent = TRUE);
 
 // Get the integer parameter of eEffect at nIndex.
 // * nIndex bounds: 0 >= nIndex < 8.
@@ -11755,3 +11919,32 @@ void SetTlkOverride(int nStrRef, string sValue="");
 // This function can be used in place of all the other ItemPropertyXxx constructors
 // Use GetItemProperty{Type,SubType,CostTableValue,Param1Value} to see the values for a given itemproperty.
 itemproperty ItemPropertyCustom(int nType, int nSubType=-1, int nCostTableValue=-1, int nParam1Value=-1);
+
+// Create a RunScript effect.
+// Notes: When applied as instant effect, only sOnAppliedScript will fire.
+//        In the scripts, OBJECT_SELF will be the object the effect is applied to.
+// * sOnAppliedScript: An optional script to execute when the effect is applied.
+// * sOnRemovedScript: An optional script to execute when the effect is removed.
+// * sOnIntervalScript: An optional script to execute every fInterval seconds.
+// * fInterval: The interval in seconds, must be >0.0f if an interval script is set.
+//              Very low values may have an adverse effect on performance.
+// * sData: An optional string of data saved in the effect, retrievable with GetEffectString() at index 0.
+effect EffectRunScript(string sOnAppliedScript = "", string sOnRemovedScript = "", string sOnIntervalScript = "", float fInterval = 0.0f, string sData = "");
+
+// Get the effect that last triggered an EffectRunScript() script.
+// Note: This can be used to get the creator or tag, among others, of the EffectRunScript() in one of its scripts.
+// * Returns an effect of type EFFECT_TYPE_INVALIDEFFECT when called outside of an EffectRunScript() script.
+effect GetLastRunScriptEffect();
+
+// Get the script type (RUNSCRIPT_EFFECT_SCRIPT_TYPE_*) of the last triggered EffectRunScript() script.
+// * Returns 0 when called outside of an EffectRunScript() script.
+int GetLastRunScriptEffectScriptType();
+
+// Hides the effect icon of eEffect and of all effects currently linked to it.
+effect HideEffectIcon(effect eEffect);
+
+// Create an Icon effect.
+// * nIconID: The effect icon (EFFECT_ICON_*) to display.
+//            Using the icon for Poison/Disease will also color the health bar green/brown, useful to simulate custom poisons/diseases.
+// Returns an effect of type EFFECT_TYPE_INVALIDEFFECT when nIconID is < 1 or > 255.
+effect EffectIcon(int nIconID);
