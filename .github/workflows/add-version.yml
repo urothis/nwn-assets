@@ -1,0 +1,16 @@
+name: Docker-Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      dockerTag:
+        description: 'What tag to build a release for'
+        required: true
+        
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        run: git branch ${{ github.event.inputs.newAppName }}
