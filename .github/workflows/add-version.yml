@@ -31,8 +31,8 @@ jobs:
           unzip neverwinter.linux.amd64.zip -d nimtools
           ./nimtools/nwn_key_unpack ${{ steps.extracted.outputs.destination }}/nwn/data/data/nwn_base.key ${GITHUB_WORKSPACE}/extracted
           sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
-          find . -name \*.nss -exec -prv cp {} nwscript \;
-          find . -name \*.2da -exec -prv cp {} 2da \;
+          find . -name \*.nss -exec cp -prv {} nwscript \;
+          find . -name \*.2da -exec cp -prv {} 2da \;
           sudo rm -r ${{ steps.extracted.outputs.destination }}/extracted
       - name: Commit files
         run: |
