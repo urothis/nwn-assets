@@ -60,11 +60,18 @@ jobs:
           filename: 'nwscript.zip'
           path: nwscript
 
+      - name: Get last commit id
+        id: gitID
+        shell: bash
+        run: |
+          echo "##[set-output name=commitID;]$(echo git log -n 1 --pretty=format:"%H")"
+
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           tag: ${{ github.event.inputs.dockerTag }}
+          commit: ${{ steps.gitID.outputs.commitID }}
           name: ${{ github.event.inputs.dockerTag }}
           artifacts: "2da.zip,nwscript.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
