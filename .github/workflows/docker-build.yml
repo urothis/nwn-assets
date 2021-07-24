@@ -36,6 +36,9 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
             
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+            
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -43,4 +46,4 @@ jobs:
           context: ./
           file: ./dockerfile
           push: true
-          tags: urothis/nwn-assets:${GITHUB_REF##*/}
+          tags: urothis/nwn-assets:${{ env.GITHUB_REF_SLUG }}
