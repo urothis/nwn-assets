@@ -32,7 +32,7 @@ jobs:
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip
           ./nwn_key_unpack ${{ steps.extracted.outputs.destination }}/nwn/data/data/nwn_base.key ${GITHUB_WORKSPACE}/extracted
-
+          sudo rm -r ${{ steps.extracted.outputs.destination }} 
 
       - name: Commit files
         run: |
