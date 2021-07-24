@@ -33,7 +33,7 @@ jobs:
           sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
           find . -name \*.nss -exec cp -prv {} nwscript \;
           find . -name \*.2da -exec cp -prv {} 2da \;
-          sudo rm -r ${{ steps.extracted.outputs.destination }}/extracted
+          sudo rm -r ${GITHUB_WORKSPACE}/extracted
       - name: Commit files
         run: |
           git add --all 
