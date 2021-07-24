@@ -18,22 +18,19 @@ jobs:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
       - name: Create new branch for version
         run: git branch ${{ github.event.inputs.dockerTag }}
-
       - uses: shrink/actions-docker-extract@v1
         id: extracted
         with:
           image: beamdog/nwserver:${{ github.event.inputs.dockerTag }}
           path: /nwn
-
       - name: Generate new version
         run: |
           sudo rm -r key-file
           sudo apt install wget unzip -y
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
-          unzip neverwinter.linux.amd64.zip
-          ./nwn_key_unpack ${{ steps.extracted.outputs.destination }}/nwn/data/data/nwn_base.key ${GITHUB_WORKSPACE}/extracted
-          sudo rm -r ${{ steps.extracted.outputs.destination }} 
-
+          unzip neverwinter.linux.amd64.zip ${GITHUB_WORKSPACE}/nimtools
+          ./nimtools/nwn_key_unpack ${{ steps.extracted.outputs.destination }}/nwn/data/data/nwn_base.key ${GITHUB_WORKSPACE}/extracted
+          sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools
       - name: Commit files
         run: |
           git add --all 
