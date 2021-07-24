@@ -1,4 +1,4 @@
-name: Docker-Build
+name: Create new version
 
 on:
   workflow_dispatch:
@@ -14,4 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Create new branch for version
-        run: git branch ${{ github.event.inputs.newAppName }}
+        run: git branch ${{ github.event.inputs.dockerTag }}
+
+
+        
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: ${{ github.event.inputs.dockerTag }}
