@@ -18,10 +18,14 @@ jobs:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
       - name: Create new branch for version
         run: git branch ${{ github.event.inputs.dockerTag }}
+
+
+
       - name: Add test file
-        run: touch testFile 
-      - name: commit files
-        run: git add --all && git commit -m 
+        run: touch testFile
+
+
+
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
