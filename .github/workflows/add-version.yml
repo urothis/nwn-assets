@@ -18,8 +18,22 @@ jobs:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
       - name: Create new branch for version
         run: git branch ${{ github.event.inputs.dockerTag }}
-      - name: Add test file
-        run: touch testFile
+
+      - uses: shrink/actions-docker-extract@v1
+        with:
+          image: my-example-image
+          path: /nwn/.
+
+      - name: Generate new version
+        run: |
+          rm -r key-file
+          apt update
+          apt install wget unzip -y
+          wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
+          unzip neverwinter.linux.amd64.zip
+          ./nwn_key_unpack /nwn/data/data/nwn_base.key /extracted
+          ls
+
       - name: Commit files
         run: |
           git add --all 
