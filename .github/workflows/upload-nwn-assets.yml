@@ -18,6 +18,8 @@ jobs:
         run: |
           cp -r /extracted/. ${GITHUB_WORKSPACE}/key-file/
       - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
 
   update-dev:
     runs-on: ubuntu-20.04
@@ -31,3 +33,5 @@ jobs:
         run: |
           cp -r /extracted/. ${GITHUB_WORKSPACE}/key-file/
       - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: dev
