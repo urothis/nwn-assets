@@ -21,7 +21,8 @@ jobs:
           path: /nwn
       - name: Generate new version
         run: |
-          sudo rm -r key-file || true
+          sudo rm -r nwscript || true
+          sudo rm -r 2da || true
           sudo apt install wget unzip -y
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip -d nimtools
