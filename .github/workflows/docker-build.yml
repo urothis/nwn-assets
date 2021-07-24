@@ -43,4 +43,4 @@ jobs:
           context: ./
           file: ./dockerfile
           push: true
-          tags: urothis/nwn-assets:latest
+          tags: urothis/nwn-assets:production
