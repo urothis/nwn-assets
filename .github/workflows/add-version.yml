@@ -45,3 +45,24 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.inputs.dockerTag }}
+
+      - name: Archive 2da
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: '2da.zip'
+          directory: 2da
+
+      - name: Archive 2da
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: 'nwscript.zip'
+          directory: nwscript
+
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ github.event.inputs.dockerTag }}
+          artifacts: "2da.zip,nwscript.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
