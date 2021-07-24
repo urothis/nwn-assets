@@ -21,7 +21,7 @@ jobs:
 
       - uses: shrink/actions-docker-extract@v1
         with:
-          image: my-example-image
+          image: beamdog/nwserver:${{ github.event.inputs.dockerTag }}
           path: /nwn/.
 
       - name: Generate new version
