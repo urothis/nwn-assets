@@ -30,7 +30,9 @@ jobs:
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip -d nimtools
           ./nimtools/nwn_key_unpack ${{ steps.extracted.outputs.destination }}/nwn/data/data/nwn_base.key ${GITHUB_WORKSPACE}/extracted
-          sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools
+          sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
+          find . -name \*.nss -exec cp {} nwscript \;
+          find . -name \*.2da -exec cp {} nwscript \;
       - name: Commit files
         run: |
           git add --all 
