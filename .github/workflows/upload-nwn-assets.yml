@@ -9,7 +9,7 @@ jobs:
   update-prod:
     runs-on: ubuntu-20.04
     container:
-      image: docker://urothis/nwn-assets:latest
+      image: docker://urothis/nwn-assets:main
     steps:
       - uses: actions/checkout@v2
         with:
@@ -22,7 +22,7 @@ jobs:
   update-dev:
     runs-on: ubuntu-20.04
     container:
-      image: docker://urothis/nwn-assets:latest
+      image: docker://urothis/nwn-assets:dev
     steps:
       - uses: actions/checkout@v2
         with:
