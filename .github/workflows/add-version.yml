@@ -30,9 +30,7 @@ jobs:
           sudo apt install wget unzip -y
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip
-
-          ls ${{ steps.extract.outputs.destination }}
-
+          sudo find / -name nwn_base.key
           ./nwn_key_unpack ${{ steps.extract.outputs.destination }}/data/data/nwn_base.key /extracted
           ls
 
