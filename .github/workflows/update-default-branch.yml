@@ -1,0 +1,66 @@
+name: Upload-NWN-Assets
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - uses: shrink/actions-docker-extract@v1
+        id: extracted
+        with:
+          image: beamdog/nwserver:dev
+          path: /nwn
+      - name: Generate new version
+        run: |
+          sudo rm -r key-file
+          sudo apt install wget unzip -y
+          wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
+          unzip neverwinter.linux.amd64.zip -d nimtools
+          ./nimtools/nwn_key_unpack ${{ steps.extracted.outputs.destination }}/nwn/data/data/nwn_base.key ${GITHUB_WORKSPACE}/extracted
+          sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
+          mkdir nwscript && find . -name \*.nss -exec cp -prv {} nwscript/ \;
+          mkdir 2da && find . -name \*.2da -exec cp -prv {} 2da/ \;
+          sudo rm -r ${GITHUB_WORKSPACE}/extracted
+      - name: Commit files
+        run: |
+          git add --all 
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "update development tag" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+
+      - name: Archive 2da
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: '2da.zip'
+          directory: 2da
+
+      - name: Archive 2da
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: 'nwscript.zip'
+          directory: nwscript
+
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          tag: dev
+          name: dev
+          artifacts: "2da.zip,nwscript.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
