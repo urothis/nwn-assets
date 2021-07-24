@@ -1,4 +1,4 @@
-name: Upload-NWN-Assets
+name: Update default/dev branch
 
 on:
   workflow_dispatch:
