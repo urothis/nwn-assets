@@ -63,6 +63,8 @@ jobs:
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
+          tag: ${{ github.event.inputs.dockerTag }}
           name: ${{ github.event.inputs.dockerTag }}
           artifacts: "2da.zip,nwscript.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
