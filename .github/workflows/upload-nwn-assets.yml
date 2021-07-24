@@ -6,12 +6,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  update-prod:
     runs-on: ubuntu-20.04
     container:
       image: docker://urothis/nwn-assets:latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: pull latest nwn assets
+        run: |
+          cp -r /extracted/. ${GITHUB_WORKSPACE}/key-file/
+      - uses: stefanzweifel/git-auto-commit-action@v4
+
+  update-dev:
+    runs-on: ubuntu-20.04
+    container:
+      image: docker://urothis/nwn-assets:latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
       - name: pull latest nwn assets
         run: |
           cp -r /extracted/. ${GITHUB_WORKSPACE}/key-file/
