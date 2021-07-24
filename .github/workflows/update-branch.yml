@@ -61,7 +61,7 @@ jobs:
         id: gitID
         shell: bash
         run: |
-          echo "##[set-output name=commitID;]$(echo git log -n 1 --pretty=format:"%H")"
+          echo "##[set-output name=commitID;]$(git log -1 --format="%H")"
 
       - name: Upload Release
         uses: ncipollo/release-action@v1
