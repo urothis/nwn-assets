@@ -6380,6 +6380,7 @@ int RESTYPE_GIF                                     = 2079;
 int RESTYPE_PNG                                     = 2080;
 int RESTYPE_JPG                                     = 2081;
 int RESTYPE_CAF                                     = 2082;
+int RESTYPE_JUI                                     = 2083;
 
 string sLanguage = "nwscript";
 
@@ -12235,62 +12236,62 @@ json JsonBool(int bValue);
 string JsonGetString(json jValue);
 
 // Returns a int representation of the json value, casting where possible.
-// Returns 0 if the value cannot be represented as a float.
+// Returns 0 if the value cannot be represented as a int.
 // Use this to parse json bool types.
 // NB: This will narrow down to signed 32 bit, as that is what NWScript int is.
-//     If you are trying to read a 64 bit or unsigned integer, you will lose data.
+//     If you are trying to read a 64 bit or unsigned integer that doesn't fit into int32, you will lose data.
 //     You will not lose data if you keep the value as a json element (via Object/ArrayGet).
 int JsonGetInt(json jValue);
 
 // Returns a float representation of the json value, casting where possible.
 // Returns 0.0 if the value cannot be represented as a float.
 // NB: This will narrow doubles down to float.
-//     If you are trying to read a double, you will lose data.
+//     If you are trying to read a double, you will potentially lose precision.
 //     You will not lose data if you keep the value as a json element (via Object/ArrayGet).
 float JsonGetFloat(json jValue);
 
 // Returns a json array containing all keys of jObject.
-// Returns a empty array if the object is empty or not a json object, with GetJsonError() filled in.
+// Returns a empty array if the object is empty or not a json object, with JsonGetError() filled in.
 json JsonObjectKeys(json jObject);
 
 // Returns the key value of sKey on the object jObect.
-// Returns a null json value if jObject is not a object or sKey does not exist on the object, with GetJsonError() filled in.
+// Returns a null json value if jObject is not a object or sKey does not exist on the object, with JsonGetError() filled in.
 json JsonObjectGet(json jObject, string sKey);
 
 // Returns a modified copy of jObject with the key at sKey set to jValue.
-// Returns a json null value if jObject is not a object, with GetJsonError() filled in.
+// Returns a json null value if jObject is not a object, with JsonGetError() filled in.
 json JsonObjectSet(json jObject, string sKey, json jValue);
 
 // Returns a modified copy of jObject with the key at sKey deleted.
-// Returns a json null value if jObject is not a object, with GetJsonError() filled in.
+// Returns a json null value if jObject is not a object, with JsonGetError() filled in.
 json JsonObjectDel(json jObject, string sKey);
 
 // Gets the json object at jArray index position nIndex.
-// Returns a json null value if the index is out of bounds, with GetJsonError() filled in.
+// Returns a json null value if the index is out of bounds, with JsonGetError() filled in.
 json JsonArrayGet(json jArray, int nIndex);
 
 // Returns a modified copy of jArray with position nIndex set to jValue.
-// Returns a json null value if jArray is not actually an array, with GetJsonError() filled in.
-// Returns a json null value if nIndex is out of bounds, with GetJsonError() filled in.
+// Returns a json null value if jArray is not actually an array, with JsonGetError() filled in.
+// Returns a json null value if nIndex is out of bounds, with JsonGetError() filled in.
 json JsonArraySet(json jArray, int nIndex, json jValue);
 
 // Returns a modified copy of jArray with jValue inserted at position nIndex.
 // All succeeding objects in the array will move by one.
 // By default (-1), inserts objects at the end of the array ("push").
 // nIndex = 0 inserts at the beginning of the array.
-// Returns a json null value if jArray is not actually an array, with GetJsonError() filled in.
-// Returns a json null value if nIndex is not 0 or -1 and out of bounds, with GetJsonError() filled in.
+// Returns a json null value if jArray is not actually an array, with JsonGetError() filled in.
+// Returns a json null value if nIndex is not 0 or -1 and out of bounds, with JsonGetError() filled in.
 json JsonArrayInsert(json jArray, json jValue, int nIndex = -1);
 
 // Returns a modified copy of jArray with the element at position nIndex removed,
 // and the array resized by one.
-// Returns a json null value if jArray is not actually an array, with GetJsonError() filled in.
-// Returns a json null value if nIndex is out of bounds, with GetJsonError() filled in.
+// Returns a json null value if jArray is not actually an array, with JsonGetError() filled in.
+// Returns a json null value if nIndex is out of bounds, with JsonGetError() filled in.
 json JsonArrayDel(json jArray, int nIndex);
 
 // Transforms the given object into a json structure.
 // The json format is compatible with what https://github.com/niv/neverwinter.nim@1.4.3+ emits.
-// Returns the null json type on errors, or if oObject is not serializable, with GetJsonError() filled in.
+// Returns the null json type on errors, or if oObject is not serializable, with JsonGetError() filled in.
 // Supported object types: creature, item, trigger, placeable, door, waypoint, encounter, store, area (combined format)
 // If bSaveObjectState is TRUE, local vars, effects, action queue, and transition info (triggers, doors) are saved out
 // (except for Combined Area Format, which always has object state saved out).
@@ -12304,13 +12305,39 @@ json ObjectToJson(object oObject, int bSaveObjectState = FALSE);
 object JsonToObject(json jObject, location locLocation, object oOwner = OBJECT_INVALID, int bLoadObjectState = FALSE);
 
 // Returns the element at the given JSON pointer value.
-// See https://datatracker.ietf.org/doc/html/rfc6901 for details.
-// Returns a json null value on error, with GetJsonError() filled in.
+// For example, given the JSON document:
+//   {
+//     "foo": ["bar", "baz"],
+//     "": 0,
+//     "a/b": 1,
+//     "c%d": 2,
+//     "e^f": 3,
+//     "g|h": 4,
+//     "i\\j": 5,
+//     "k\"l": 6,
+//     " ": 7,
+//     "m~n": 8
+//   }
+// The following JSON strings evaluate to the accompanying values:
+//   ""           // the whole document
+//   "/foo"       ["bar", "baz"]
+//   "/foo/0"     "bar"
+//   "/"          0
+//   "/a~1b"      1
+//   "/c%d"       2
+//   "/e^f"       3
+//   "/g|h"       4
+//   "/i\\j"      5
+//   "/k\"l"      6
+//   "/ "         7
+//   "/m~0n"      8
+// See https://datatracker.ietf.org/doc/html/rfc6901 for more details.
+// Returns a json null value on error, with JsonGetError() filled in.
 json JsonPointer(json jData, string sPointer);
 
-// Return a modified copy of jData with jValue inserted at the path described by sPointer.
-// See https://datatracker.ietf.org/doc/html/rfc6901 for details.
-// Returns a json null value on error, with GetJsonError() filled in.
+// Return a modified copy of jData with jPatch applied, according to the rules described below.
+// See JsonPointer() for documentation on the pointer syntax.
+// Returns a json null value on error, with JsonGetError() filled in.
 // jPatch is an array of patch elements, each containing a op, a path, and a value field. Example:
 // [
 //   { "op": "replace", "path": "/baz", "value": "boo" },
@@ -12318,16 +12345,17 @@ json JsonPointer(json jData, string sPointer);
 //   { "op": "remove", "path": "/foo"}
 // ]
 // Valid operations are: add, remove, replace, move, copy, test
+// See https://datatracker.ietf.org/doc/html/rfc7386 for more details on the patch rules.
 json JsonPatch(json jData, json jPatch);
 
 // Returns the diff (described as a json structure you can pass into JsonPatch) between the two objects.
-// Returns a json null value on error, with GetJsonError() filled in.
+// Returns a json null value on error, with JsonGetError() filled in.
 json JsonDiff(json jLHS, json jRHS);
 
 // Returns a modified copy of jData with jMerge merged into it. This is an alternative to
 // JsonPatch/JsonDiff, with a syntax more closely resembling the final object.
 // See https://datatracker.ietf.org/doc/html/rfc7386 for details.
-// Returns a json null value on error, with GetJsonError() filled in.
+// Returns a json null value on error, with JsonGetError() filled in.
 json JsonMerge(json jData, json jMerge);
 
 // Get oObject's local json variable sVarName
@@ -12396,7 +12424,7 @@ int GetPlayerDevicePlatform(object oPlayer);
 // * RESTYPE_UTW
 // * RESTYPE_UTE
 // * RESTYPE_UTM
-// Returns a valid gff-type json structure, or a null value with GetJsonError() set.
+// Returns a valid gff-type json structure, or a null value with JsonGetError() set.
 json TemplateToJson(string sResRef, int nResType);
 
 // Returns the resource location of sResRef.nResType, as seen by the running module.
