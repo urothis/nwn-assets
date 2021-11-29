@@ -6382,6 +6382,26 @@ int RESTYPE_JPG                                     = 2081;
 int RESTYPE_CAF                                     = 2082;
 int RESTYPE_JUI                                     = 2083;
 
+// For JsonArrayTransform():
+int JSON_ARRAY_SORT_ASCENDING                       = 1;
+int JSON_ARRAY_SORT_DESCENDING                      = 2;
+int JSON_ARRAY_SHUFFLE                              = 3;
+int JSON_ARRAY_REVERSE                              = 4;
+int JSON_ARRAY_UNIQUE                               = 5;
+int JSON_ARRAY_COALESCE                             = 6;
+
+int JSON_FIND_EQUAL                                 = 0;
+int JSON_FIND_LT                                    = 1;
+int JSON_FIND_LTE                                   = 2;
+int JSON_FIND_GT                                    = 3;
+int JSON_FIND_GTE                                   = 4;
+
+int JSON_SET_SUBSET                                 = 1;
+int JSON_SET_UNION                                  = 2;
+int JSON_SET_INTERSECT                              = 3;
+int JSON_SET_DIFFERENCE                             = 4;
+int JSON_SET_SYMMETRIC_DIFFERENCE                   = 5;
+
 string sLanguage = "nwscript";
 
 // Get an integer between 0 and nMaxInteger-1.
@@ -12541,3 +12561,66 @@ json NuiGetUserData(object oPlayer, int nToken);
 // This mechanism only exists as a convenience for the programmer to store data bound to a windows' lifecycle.
 // Will do nothing if the window does not exist.
 void NuiSetUserData(object oPlayer, int nToken, json jUserData);
+
+// Returns the number of script instructions remaining for the currently-running script.
+// Once this value hits zero, the script will abort with TOO MANY INSTRUCTIONS.
+// The instruction limit is configurable by the user, so if you have a really long-running
+// process, this value can guide you with splitting it up into smaller, discretely schedulable parts.
+// Note: Running this command and checking/handling the value also takes up some instructions.
+int GetScriptInstructionsRemaining();
+
+// Returns a modified copy of jArray with the value order changed according to nTransform:
+// * JSON_ARRAY_SORT_ASCENDING, JSON_ARRAY_SORT_DESCENDING
+//    Sorting is dependent on the type and follows json standards (.e.g. 99 < "100").
+// * JSON_ARRAY_SHUFFLE
+//   Randomises the order of elements.
+// * JSON_ARRAY_REVERSE
+//   Reverses the array.
+// * JSON_ARRAY_UNIQUE
+//   Returns a modified copy of jArray with duplicate values removed.
+//   Coercable but different types are not considered equal (e.g. 99 != "99"); int/float equivalence however applies: 4.0 == 4.
+//   Order is preserved.
+// * JSON_ARRAY_COALESCE
+//   Returns the first non-null entry. Empty-ish values (e.g. "", 0) are not considered null, only the json scalar type.
+json JsonArrayTransform(json jArray, int nTransform);
+
+// Returns the nth-matching index or key of jNeedle in jHaystack.
+// Supported haystacks: object, array
+// Ordering behaviour for objects is unspecified.
+// Return null when not found or on any error.
+json JsonFind(json jHaystack, json jNeedle, int nNth = 0, int nConditional = JSON_FIND_EQUAL);
+
+// Returns a copy of the range (nBeginIndex, nEndIndex) inclusive of jArray.
+// Negative nEndIndex values count from the other end.
+// Out-of-bound values are clamped to the array range.
+// Examples:
+//  json a = JsonParse("[0, 1, 2, 3, 4]");
+//  JsonArrayGetRange(a, 0, 1)    // => [0, 1]
+//  JsonArrayGetRange(a, 1, -1)   // => [1, 2, 3, 4]
+//  JsonArrayGetRange(a, 0, 4)    // => [0, 1, 2, 3, 4]
+//  JsonArrayGetRange(a, 0, 999)  // => [0, 1, 2, 3, 4]
+//  JsonArrayGetRange(a, 1, 0)    // => []
+//  JsonArrayGetRange(a, 1, 1)    // => [1]
+// Returns a null type on error, including type mismatches.
+json JsonArrayGetRange(json jArray, int nBeginIndex, int nEndIndex);
+
+// Returns the result of a set operation on two arrays.
+// Operations:
+// * JSON_SET_SUBSET (v <= o):
+//   Returns true if every element in jValue is also in jOther.
+// * JSON_SET_UNION (v | o):
+//   Returns a new array containing values from both sides.
+// * JSON_SET_INTERSECT (v & o):
+//   Returns a new array containing only values common to both sides.
+// * JSON_SET_DIFFERENCE (v - o):
+//   Returns a new array containing only values not in jOther.
+// * JSON_SET_SYMMETRIC_DIFFERENCE (v ^ o):
+//   Returns a new array containing all elements present in either array, but not both.
+json JsonSetOp(json jValue, int nOp, json jOther);
+
+// Returns the column name of s2DA at nColumn index (starting at 0).
+// Returns "" if column nColumn doesn't exist (at end).
+string Get2DAColumn(string s2DA, int nColumnIdx);
+
+// Returns the number of defined rows in the 2da s2DA.
+int Get2DARowCount(string s2DA);

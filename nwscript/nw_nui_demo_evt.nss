@@ -14,6 +14,60 @@ void main()
   int    nIdx    = NuiGetEventArrayIndex();
   string sWndId  = NuiGetWindowId(oPlayer, nToken);
 
+  if (sWndId == "spreadsheet")
+  {
+    int colcount = JsonGetInt(NuiGetBind(oPlayer, nToken, "colcount"));
+
+    if (sEvent == "click" && (sElem == "btn-" || sElem == "btn+"))
+    {
+      int col; for (col = 0; col < colcount; col++)
+      {
+        string dataLabel = "data" + IntToString(col);
+        string visiLabel = "visible" + IntToString(col);
+
+        json jdata = NuiGetBind(oPlayer, nToken, dataLabel);
+        json jvisi = NuiGetBind(oPlayer, nToken, visiLabel);
+
+        int rowcount = JsonGetLength(jdata);
+
+        if (sElem == "btn+")
+        {
+          int newidx = (nIdx == rowcount-1) ? -1 : nIdx + 1;
+          jdata = JsonArrayInsert(jdata, JsonString(""), newidx);
+          jvisi = JsonArrayInsert(jvisi, JsonBool(1), newidx);
+        }
+        else
+        {
+          // Never allow deleting the last row, no way to get the buttons back.
+          if (rowcount > 1)
+          {
+            jdata = JsonArrayDel(jdata, nIdx);
+            jvisi = JsonArrayDel(jvisi, nIdx);
+          }
+        }
+
+        NuiSetBind(oPlayer, nToken, dataLabel, jdata);
+        NuiSetBind(oPlayer, nToken, visiLabel, jvisi);
+      }
+    }
+    if (sEvent == "watch" && GetSubString(sElem, 0, 4) == "data")
+    {
+      int sum = 0;
+      int colcount = JsonGetInt(NuiGetBind(oPlayer, nToken, "colcount"));
+      int col; for (col = 0; col < colcount; col++)
+      {
+        json jdata = NuiGetBind(oPlayer, nToken, "data" + IntToString(col));
+        int rowcount = JsonGetLength(jdata);
+        int row; for (row = 0; row < rowcount; row++)
+        {
+          int val = StringToInt(JsonGetString(JsonArrayGet(jdata, row)));
+          sum = sum + val;
+        }
+      }
+      NuiSetBind(oPlayer, nToken, "label", JsonString(IntToString(sum)));
+    }
+  }
+
   if (sWndId == "poviewer")
   {
     int po_category = JsonGetInt(NuiGetBind(oPlayer, nToken, "po_category"));

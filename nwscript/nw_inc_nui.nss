@@ -205,11 +205,13 @@ NuiLabel(
   json jVAlign           // Bind:Int:NUI_VALIGN_*
 );
 
-// Create a non-editable text field: This element can do multiple lines, has a skinned
-// border and a scrollbar if needed.
+// Create a non-editable text field. Note: This text field internally implies a NuiGroup wrapped
+// around it, which is providing the optional border and scrollbars.
 json                     // Element
 NuiText(
-  json jValue            // Bind:String
+  json jValue,           // Bind:String
+  int bBorder = TRUE,    // Bool
+  int nScroll = NUI_SCROLLBARS_AUTO // Int:NUI_SCROLLBARS_*
 );
 
 // A clickable button with text as the label.
@@ -306,9 +308,11 @@ NuiTextEdit(
 // jRowHeight defines the height of the rendered rows.
 json                     // Element
 NuiList(
-  json jTemplate,        // NuiListTemplateCell[]
+  json jTemplate,        // NuiListTemplateCell[] (max: 16)
   json jRowCount,        // Bind:Int
-  float fRowHeight = NUI_STYLE_ROW_HEIGHT
+  float fRowHeight = NUI_STYLE_ROW_HEIGHT,
+  int bBorder = TRUE,
+  int nScroll = NUI_SCROLLBARS_Y  // Note: Cannot be AUTO.
 );
 
 json                     // NuiListTemplateCell
@@ -649,10 +653,15 @@ NuiLabel(
 
 json
 NuiText(
-  json jValue
+  json jValue,
+  int bBorder = TRUE,
+  int nScroll = NUI_SCROLLBARS_AUTO
 )
 {
-  return NuiElement("text", JsonNull(), jValue);
+  json ret = NuiElement("text", JsonNull(), jValue);
+  ret = JsonObjectSet(ret, "border", JsonBool(bBorder));
+  ret = JsonObjectSet(ret, "scrollbars", JsonInt(nScroll));
+  return ret;
 }
 
 json
@@ -778,13 +787,17 @@ json
 NuiList(
   json jTemplate,
   json jRowCount,
-  float fRowHeight = NUI_STYLE_ROW_HEIGHT
+  float fRowHeight = NUI_STYLE_ROW_HEIGHT,
+  int bBorder = TRUE,
+  int nScroll = NUI_SCROLLBARS_Y
 )
 {
   json ret = NuiElement("list", JsonNull(), JsonNull());
   ret = JsonObjectSet(ret, "row_template", jTemplate);
   ret = JsonObjectSet(ret, "row_count", jRowCount);
   ret = JsonObjectSet(ret, "row_height", JsonFloat(fRowHeight));
+  ret = JsonObjectSet(ret, "border", JsonBool(bBorder));
+  ret = JsonObjectSet(ret, "scrollbars", JsonInt(nScroll));
   return ret;
 }
 
