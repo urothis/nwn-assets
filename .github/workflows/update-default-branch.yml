@@ -23,6 +23,7 @@ jobs:
         run: |
           sudo rm -r nwscript || true
           sudo rm -r 2da || true
+          sudo rm -r tga || true
           sudo apt install wget unzip -y
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip -d nimtools
@@ -30,18 +31,19 @@ jobs:
           sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
           mkdir nwscript && find . -name \*.nss -exec cp -prv {} nwscript/ \;
           mkdir 2da && find . -name \*.2da -exec cp -prv {} 2da/ \;
+          mkdir tga && find . -name \*.tga -exec cp -prv {} tga/ \;
           sudo rm -r ${GITHUB_WORKSPACE}/extracted
       - name: Commit files
         run: |
           git add --all 
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -m "update development tag" -a
+          git commit -m "Update ${{ env.GITHUB_REF_SLUG }}" -a
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          branch: ${{ env.GITHUB_REF_SLUG }}
 
       - name: Archive 2da
         uses: thedoctor0/zip-release@master
@@ -50,12 +52,18 @@ jobs:
           filename: '2da.zip'
           path: 2da
 
-      - name: Archive 2da
+      - name: Archive nwscript
         uses: thedoctor0/zip-release@master
         with:
-          output: ting
           type: 'zip'
           filename: 'nwscript.zip'
+          path: nwscript
+
+      - name: Archive tga
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: 'tga.zip'
           path: nwscript
 
       - name: Upload Release
@@ -64,5 +72,5 @@ jobs:
           allowUpdates: true
           tag: dev
           name: dev
-          artifacts: "2da.zip,nwscript.zip"
+          artifacts: "2da.zip,tga.zip,nwscript.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
