@@ -23,6 +23,7 @@ jobs:
         run: |
           sudo rm -r nwscript || true
           sudo rm -r 2da || true
+          sudo rm -r tga || true
           sudo apt install wget unzip -y
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip -d nimtools
@@ -30,6 +31,7 @@ jobs:
           sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
           mkdir nwscript && find . -name \*.nss -exec cp -prv {} nwscript/ \;
           mkdir 2da && find . -name \*.2da -exec cp -prv {} 2da/ \;
+          mkdir tga && find . -name \*.tga -exec cp -prv {} tga/ \;
           sudo rm -r ${GITHUB_WORKSPACE}/extracted
       - name: Commit files
         run: |
@@ -55,6 +57,13 @@ jobs:
         with:
           type: 'zip'
           filename: 'nwscript.zip'
+          path: nwscript
+
+      - name: Archive tga
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: 'tga.zip'
           path: nwscript
 
       - name: Get last commit id
