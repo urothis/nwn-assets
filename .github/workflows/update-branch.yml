@@ -79,5 +79,5 @@ jobs:
           tag: ${{ env.GITHUB_REF_SLUG }}
           commit: ${{ steps.gitID.outputs.commitID }}
           name: ${{ env.GITHUB_REF_SLUG }}
-          artifacts: "2da.zip,nwscript.zip"
+          artifacts: "2da.zip,tga.zip,nwscript.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
