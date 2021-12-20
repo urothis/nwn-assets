@@ -6,29 +6,31 @@ on:
       dockerTag:
         description: 'What tag to build a release for'
         required: true
-        
+
 jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
+      -
+        name: Checkout
         uses: actions/checkout@v2
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
-      - name: Create new branch for version
+      -
+        name: Create new branch for version
         run: git branch ${{ github.event.inputs.dockerTag }}
-      - uses: shrink/actions-docker-extract@v1
+      -
+        uses: shrink/actions-docker-extract@v1
         id: extracted
         with:
           image: beamdog/nwserver:${{ github.event.inputs.dockerTag }}
           path: /nwn
-          
-      - name: Generate new version
+      -
+        name: Generate new version
         run: |
           sudo rm -r nwscript || true
           sudo rm -r 2da || true
-          sudo rm -r tga || true
           sudo apt install wget unzip -y
           wget https://github.com/niv/neverwinter.nim/releases/download/1.4.2/neverwinter.linux.amd64.zip
           unzip neverwinter.linux.amd64.zip -d nimtools
@@ -36,53 +38,47 @@ jobs:
           sudo rm -r ${{ steps.extracted.outputs.destination }} && sudo rm -r ${GITHUB_WORKSPACE}/nimtools && rm neverwinter.linux.amd64.zip
           mkdir nwscript && find . -name \*.nss -exec cp -prv {} nwscript/ \;
           mkdir 2da && find . -name \*.2da -exec cp -prv {} 2da/ \;
-          mkdir tga && find . -name \*.tga -exec cp -prv {} tga/ \;
           sudo rm -r ${GITHUB_WORKSPACE}/extracted
-      - name: Commit files
+      -
+        name: Commit files
         run: |
-          git add --all 
+          git add --all
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "Update ${{ env.GITHUB_REF_SLUG }}" -a
-      - name: Push changes
+      -
+        name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ env.GITHUB_REF_SLUG }}
-
-      - name: Archive 2da
+      -
+        name: Archive 2da
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
           filename: '2da.zip'
           path: 2da
-
-      - name: Archive nwscript
+      -
+        name: Archive nwscript
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
           filename: 'nwscript.zip'
           path: nwscript
-
-      - name: Archive tga
-        uses: thedoctor0/zip-release@master
-        with:
-          type: 'zip'
-          filename: 'tga.zip'
-          path: nwscript
-
-      - name: Get last commit id
+      -
+        name: Get last commit id
         id: gitID
         shell: bash
         run: |
           echo "##[set-output name=commitID;]$(git log -1 --format="%H")"
-
-      - name: Upload Release
+      -
+        name: Upload Release
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           tag: ${{ github.event.inputs.dockerTag }}
           commit: ${{ steps.gitID.outputs.commitID }}
           name: ${{ github.event.inputs.dockerTag }}
-          artifacts: "2da.zip,tga.zip,nwscript.zip"
+          artifacts: "2da.zip,nwscript.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
