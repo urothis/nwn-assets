@@ -19,7 +19,7 @@ jobs:
           dir: "${{ github.workspace }}/game_files/"
           os: "windows"
           app: 704450
-          osarch: 64
+          osarch: 32
           #files: |
           #  hl2.exe
           #  regex:^hl2\/bin\/.+
