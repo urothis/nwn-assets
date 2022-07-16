@@ -17,4 +17,4 @@ jobs:
       #- name: Download NeverwinterNights content
       #  run: steamcmd +@sSteamCmdForcePlatformType linux +force_install_dir ./data/content/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704451 validate +quit
       - name: Download NeverwinterNights windows
-        run: steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir ./data/windows/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704452 validate +quit
+        run: steamcmd +force_install_dir ./data/windows/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704454 validate +quit
