@@ -15,6 +15,6 @@ jobs:
       - name: Setup steamcmd
         uses: CyberAndrii/setup-steamcmd@v1
       - name: Download NeverwinterNights content
-        run: steamcmd +force_install_dir ./data/windows/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 7044511 validate +quit
+        run: steamcmd +force_install_dir ./data/windows/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704451 validate +quit
       - name: Download NeverwinterNights windows
-        run: steamcmd +force_install_dir ./data/windows/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 7044512 validate +quit
+        run: steamcmd +force_install_dir ./data/windows/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704452 validate +quit
