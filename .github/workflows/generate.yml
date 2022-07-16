@@ -1,0 +1,26 @@
+name: Config
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - '30 5,17 * * *'
+
+jobs:
+  test:
+    name: Generate nwn files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: "Skippeh/steamfetch-action@v1"
+        with:
+          username: "${{ secrets.STEAM_USER }}"
+          password: "${{ secrets.STEAM_PASS }}"
+          dir: "${{ github.workspace }}/game_files/"
+          os: "windows"
+          app: 704450
+          osarch: 64
+          #files: |
+          #  hl2.exe
+          #  regex:^hl2\/bin\/.+
+      - run: ls ${{ github.workspace }}/game_files/
