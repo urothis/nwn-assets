@@ -12,32 +12,11 @@ jobs:
     steps:
       #- name: Checkout
       #  uses: actions/checkout@v3
-      - uses: "Skippeh/steamfetch-action@v1"
-        with:
-          username: "${{ secrets.STEAM_USER }}"
-          password: "${{ secrets.STEAM_PASS }}"
-          dir: "${{ github.workspace }}/game_files/"
-          os: "windows"
-          app: 704450
-          osarch: 32
-          #files: |
-          #  hl2.exe
-          #  regex:^hl2\/bin\/.+
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: "3.7"
-
-      - name: Fetch action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: "${{ github.workspace }}/game_files/"
-          type: ".bif"
-
-      - name: Output results
-        run: |
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i
-          done
+      - name: Setup steamcmd
+        uses: CyberAndrii/setup-steamcmd@v1
+      - name: Set Install Directory
+        run: mkdir nwn_files && steamcmd force_install_dir ./nwn_files/
+      - name: Login to Steam
+        run: steamcmd +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +quit
+      - name: Download NeverwinterNights
+        run: steamcmd app_update 704450 validate
