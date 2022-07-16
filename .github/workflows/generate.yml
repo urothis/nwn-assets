@@ -15,8 +15,8 @@ jobs:
       - name: Setup steamcmd
         uses: CyberAndrii/setup-steamcmd@v1
       - name: Set Install Directory
-        run: mkdir nwn_files && steamcmd force_install_dir ./nwn_files/
+        run: mkdir nwn_files && steamcmd force_install_dir ./nwn_files/ +quit
       - name: Login to Steam
         run: steamcmd +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +quit
       - name: Download NeverwinterNights
-        run: steamcmd app_update 704450 validate
+        run: steamcmd app_update 704450 validate +quit
