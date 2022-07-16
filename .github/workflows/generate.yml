@@ -10,8 +10,8 @@ jobs:
     name: Generate nwn files
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      #- name: Checkout
+      #  uses: actions/checkout@v3
       - uses: "Skippeh/steamfetch-action@v1"
         with:
           username: "${{ secrets.STEAM_USER }}"
@@ -23,4 +23,4 @@ jobs:
           #files: |
           #  hl2.exe
           #  regex:^hl2\/bin\/.+
-      - run: ls ${{ github.workspace }}/game_files/
+      - run: echo ls ${{ github.workspace }}/game_files/
