@@ -19,4 +19,4 @@ jobs:
       - name: Login to Steam
         run: steamcmd +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +quit
       - name: Download NeverwinterNights
-        run: steamcmd app_update 704450 validate +quit
+        run: steamcmd app_update 704450 validate
