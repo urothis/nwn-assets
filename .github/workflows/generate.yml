@@ -13,6 +13,6 @@ jobs:
       - name: Setup steamcmd
         uses: CyberAndrii/setup-steamcmd@v1
       - name: Download NeverwinterNights windows
-        run: steamcmd +@sSteamCmdForcePlatformType linux +force_install_dir ./depot_data/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704454 validate +quit
+        run: steamcmd +@sSteamCmdForcePlatformType linux +force_install_dir ./depot_data/ +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} +app_update 704451 validate +quit
       #- name: Checkout
       #  uses: actions/checkout@v3
