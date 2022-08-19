@@ -1,4 +1,4 @@
-name: Config
+name: Generate
 
 on:
   workflow_dispatch:
@@ -10,10 +10,12 @@ jobs:
     name: Generate nwn files
     runs-on: ubuntu-latest
     steps:
-      - name: Setup steamcmd
-        uses: CyberAndrii/setup-steamcmd@v1
-      - name: Download NeverwinterNights windows
-        run: |
-          steamcmd +login ${{ secrets.STEAM_USER }} ${{ secrets.STEAM_PASS }} 704451 validate +quit
       - run: |
-          steamcmd +force_install_dir ../data/ 704451 validate +quit
+          gh repo clone SteamRE/DepotDownloader
+
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      - run: |
+          cd DepotDownloader/DeplotDownloader
+          dotnet run -app 704451 -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
