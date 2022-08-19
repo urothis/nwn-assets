@@ -19,4 +19,4 @@ jobs:
           dotnet-version: '6.0.x'
       - run: |
           cd DepotDownloader/DepotDownloader
-          dotnet run -app 704451 -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          dotnet run -app 704450 -depot 704451 -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
