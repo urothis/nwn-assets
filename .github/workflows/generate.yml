@@ -3,11 +3,23 @@ name: Generate
 on:
   workflow_dispatch:
     inputs:
-      release-branch:
-        type: string
-        description: steam branch name to use, See https://steamdb.info/app/704450/depots/
-        required: true
+      release:
+        type: choice
+        description: What version to generate
         default: preview
+        options:
+        - preview
+        - build8193.34
+        - build8193.33
+        - build8193.32
+        - build8193.31
+        - build8193.30
+        - build8193.29
+        - build8193.28
+        - build8193.27
+        - build8193.26
+        - build8193.25
+        required: true
 
 jobs:
   generate:
@@ -25,23 +37,69 @@ jobs:
           cd ..
           gh repo clone SteamRE/DepotDownloader
       - name: Download preview nwn:ee files
-        if: github.event.inputs.release-branch == 'preview'
+        if: github.event.inputs.release == 'preview'
         run: |
           cd ../DepotDownloader/DepotDownloader
-          dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release-branch }} -betapassword ${{ github.event.inputs.release-branch }}${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release }} -betapassword ${{ github.event.inputs.release }}${{ github.event.inputs.release }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ../..
-          mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
+          mkdir out && mkdir out/${{ github.event.inputs.release }}
       - name: Download nwn:ee files
-        if: github.event.inputs.release-branch != 'preview'
+        if: github.event.inputs.release != 'preview'
         run: |
           cd ../DepotDownloader/DepotDownloader
-          dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ../..
-          mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
-      - run: |
+          mkdir out && mkdir out/${{ github.event.inputs.release }}
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'preview'
+        run: |
           nimble install neverwinter -y
-          nwn_key_unpack ../depots/704451/7843474/data/nwn_base.key ../unpacked
-
+          nwn_key_unpack ../depots/704451/9334745/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.34'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/7437906/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.32'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/7398767/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.31'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/7370737/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.30'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/7070152/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.29'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/6999455/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.28'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/6952603/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.27'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/6933430/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.26'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/6925985/data/nwn_base.key ../unpacked
+      - name: unpack keyfile
+        if: github.event.inputs.release == 'build8193.25'
+        run: |
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/6907248/data/nwn_base.key ../unpacked
       # 2da
       - name: "Checkout source code"
         uses: "actions/checkout@v3"
@@ -56,10 +114,10 @@ jobs:
       # commit
       #- uses: EndBug/add-and-commit@v9
       #  with:
-      #    message: 'CI: ${{ github.event.inputs.release-branch }}'
-      #    tag: '${{ github.event.inputs.release-branch }}/2da'
+      #    message: 'CI: ${{ github.event.inputs.release }}'
+      #    tag: '${{ github.event.inputs.release }}/2da'
       #    tag_push: '--force'
-      #    new_branch: '${{ github.event.inputs.release-branch }}/2da'
+      #    new_branch: '${{ github.event.inputs.release }}/2da'
       #    committer_name: GitHub Actions
       #    committer_email: 41898282+github-actions[bot]@users.noreply.github.com
 
