@@ -24,11 +24,16 @@ on:
 
 jobs:
   generate:
-    name: Generate nwn files
+    name: Generate ${{ github.event.inputs.release }} nwn files
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_ACCESS_TOKEN  }}
       - uses: jiro4989/setup-nim-action@v1
       - uses: actions/setup-dotnet@v2
         with:
@@ -96,16 +101,11 @@ jobs:
         run: |
           nwn_key_unpack DepotDownloader/DepotDownloader/depots/704451/6907248/data/nwn_base.key unpacked/
       # 2da
-      - name: "Checkout source code"
-        uses: "actions/checkout@v3"
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_ACCESS_TOKEN  }}
       # gather 2da files
       - name: Gather 2da files
         run: |
           # clean repo folder
-          find . -mindepth 1 -maxdepth 1 ! - name 'unpacked' ! -name '.gitignore' ! -name '.git' -exec echo rm rf {} +
+          find . -mindepth 1 -maxdepth 1 ! - name 'unpacked' ! - name '.gitattributes' ! - name '.gitignore' ! - name '.git' -exec echo rm rf {} +
 
       # commit
       #- uses: EndBug/add-and-commit@v9
@@ -117,7 +117,12 @@ jobs:
       #    new_branch: '${{ github.event.inputs.release }}/2da'
       #    committer_name: GitHub Actions
       #    committer_email: 41898282+github-actions[bot]@users.noreply.github.com
-
+      # reset head for dds
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
 #2da
 #dds
