@@ -35,14 +35,14 @@ jobs:
         if: github.event.inputs.increment_type == 'preview'
         run: |
           cd ../DepotDownloader/DepotDownloader
-          dotnet run -app 704450 -depot 704451 -manifest 7617088375292372759 -beta ${{ github.event.inputs.release-branch }} -betapassword ${{ github.event.inputs.release-branch }}${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release-branch }} -betapassword ${{ github.event.inputs.release-branch }}${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ../..
           mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
       - name: Download nwn:ee files
         if: github.event.inputs.increment_type != 'preview'
         run: |
           cd ../DepotDownloader/DepotDownloader
-          dotnet run -app 704450 -depot 704451 -manifest 7617088375292372759 -beta ${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ../..
           mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
       - run: |
