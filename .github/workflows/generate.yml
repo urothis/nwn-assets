@@ -3,10 +3,6 @@ name: Generate
 on:
   workflow_dispatch:
     inputs:
-      nwnee-version:
-        type: string
-        description: NWN:EE version
-        required: true
       release-branch:
         type: string
         description: steam branch name to use, See https://steamdb.info/app/704450/depots/
