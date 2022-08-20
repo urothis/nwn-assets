@@ -39,5 +39,60 @@ jobs:
           cd ../..
           mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
       - run: |
-          nimble install nasher -y
-          nasher unpack --file:../depots/704451/7843474/data/nwn_base.key
+          nimble install neverwinter -y
+          nwn_key_unpack ../depots/704451/7843474/data/nwn_base.key ../unpacked
+
+      # 2da
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_ACCESS_TOKEN  }}
+      # gather 2da
+      - name: Gather 2da files
+        run: |
+          # clean repo folder test
+          find . -mindepth 1 -maxdepth 1 ! -name '.gitignore' ! -name '.git' -exec echo rm rf {} +
+      # commit
+      #- uses: EndBug/add-and-commit@v9
+      #  with:
+      #    message: 'CI: ${{ github.event.inputs.release-branch }}'
+      #    tag: '${{ github.event.inputs.release-branch }}/2da'
+      #    tag_push: '--force'
+      #    new_branch: '${{ github.event.inputs.release-branch }}/2da'
+      #    committer_name: GitHub Actions
+      #    committer_email: 41898282+github-actions[bot]@users.noreply.github.com
+
+
+#2da
+#dds
+#dlg
+#doc
+#dwk
+#gff
+#gui
+#ids
+#ini
+#itp
+#ltr
+#mdl
+#mod
+#mtr
+#nss
+#ovr
+#plt
+#ptt
+#pwk
+#set
+#shd
+#ssf
+#tga
+#tlk
+#ute
+#uti
+#utm
+#utp
+#uts
+#utt
+#utw
+#wok
