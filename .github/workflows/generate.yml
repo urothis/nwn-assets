@@ -21,7 +21,7 @@ jobs:
       - run: |
           cd ../DepotDownloader/DepotDownloader
           dotnet run -app 704450 -depot 704451 -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
-          mkdir ..out && mkdir ../out/8193.34
+          mkdir ../out && mkdir ../out/8193.34
       - uses: squattingmonk/nasher@master
         with:
           nasher_command: nasher unpack --file:depots/704451/7843474/data/nwn_base.key ../out/8193.34
