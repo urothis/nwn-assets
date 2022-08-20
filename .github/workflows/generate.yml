@@ -40,4 +40,4 @@ jobs:
           mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
       - run: |
           nimble install nasher -y
-          nasher unpack --file:depots/704451/7843474/data/nwn_base.key ../out/${{ github.event.inputs.release-branch }}
+          nasher unpack --file:../depots/704451/7843474/data/nwn_base.key
