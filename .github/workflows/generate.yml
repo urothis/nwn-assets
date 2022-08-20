@@ -2,26 +2,49 @@ name: Generate
 
 on:
   workflow_dispatch:
-  #schedule:
-  #  - '30 5,17 * * *'
+    inputs:
+      nwnee-version:
+        type: string
+        description: NWN:EE version
+        required: true
+      release-branch:
+        type: string
+        description: steam branch name to use, See https://steamdb.info/app/704450/depots/
+        required: true
+        default: preview
 
 jobs:
-  test:
+  generate:
     name: Generate nwn files
+    if: github.event.inputs.increment_type != 'preview'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - run: |
-          cd ..
-          gh repo clone SteamRE/DepotDownloader
+      - uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: '1.6.0' # default is 'stable'
       - uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0.x'
-      - run: |
+      - name: Clone SteamRE/DepotDownloader
+        run: |
+          cd ..
+          gh repo clone SteamRE/DepotDownloader
+      - name: Download preview nwn:ee files
+        if: github.event.inputs.increment_type == 'preview'
+        run: |
           cd ../DepotDownloader/DepotDownloader
-          dotnet run -app 704450 -depot 704451 -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
-          mkdir ../out && mkdir ../out/8193.34
-      - uses: squattingmonk/nasher@master
-        with:
-          nasher_command: nasher unpack --file:depots/704451/7843474/data/nwn_base.key ../out/8193.34
+          dotnet run -app 704450 -depot 704451 -manifest 7617088375292372759 -beta ${{ github.event.inputs.release-branch }} -betapassword ${{ github.event.inputs.release-branch }}${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          cd ../..
+          mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
+      - name: Download nwn:ee files
+        if: github.event.inputs.increment_type != 'preview'
+        run: |
+          cd ../DepotDownloader/DepotDownloader
+          dotnet run -app 704450 -depot 704451 -manifest 7617088375292372759 -beta ${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
+          cd ../..
+          mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
+      - run: |
+          nimble install nasher
+          nasher unpack --file:depots/704451/7843474/data/nwn_base.key ../out/${{ github.event.inputs.release-branch }}
