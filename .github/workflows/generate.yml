@@ -28,14 +28,14 @@ jobs:
           cd ..
           gh repo clone SteamRE/DepotDownloader
       - name: Download preview nwn:ee files
-        if: github.event.inputs.increment_type == 'preview'
+        if: github.event.inputs.release-branch == 'preview'
         run: |
           cd ../DepotDownloader/DepotDownloader
           dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release-branch }} -betapassword ${{ github.event.inputs.release-branch }}${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ../..
           mkdir out && mkdir out/${{ github.event.inputs.release-branch }}
       - name: Download nwn:ee files
-        if: github.event.inputs.increment_type != 'preview'
+        if: github.event.inputs.release-branch != 'preview'
         run: |
           cd ../DepotDownloader/DepotDownloader
           dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release-branch }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
