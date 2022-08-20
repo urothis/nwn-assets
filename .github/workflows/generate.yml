@@ -13,14 +13,15 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - run: |
+          cd ..
           gh repo clone SteamRE/DepotDownloader
       - uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0.x'
       - run: |
-          cd DepotDownloader/DepotDownloader
+          cd ../DepotDownloader/DepotDownloader
           dotnet run -app 704450 -depot 704451 -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
-          mkdir out && mkdir out/8193.34
+          mkdir ..out && mkdir ../out/8193.34
       - uses: squattingmonk/nasher@master
         with:
-          nasher_command: unpack --file:depots/704451/7843474/data/nwn_base.key out/8193.34
+          nasher_command: nasher unpack --file:depots/704451/7843474/data/nwn_base.key ../out/8193.34
