@@ -42,14 +42,14 @@ jobs:
           cd DepotDownloader/DepotDownloader
           dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release }} -betapassword ${{ github.event.inputs.release }}${{ github.event.inputs.release }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ${{ env.GITHUB_WORKSPACE }}
-          mkdir out && mkdir out
+          mkdir out
       - name: Download nwn:ee files
         if: github.event.inputs.release != 'preview'
         run: |
           cd DepotDownloader/DepotDownloader
           dotnet run -app 704450 -depot 704451 -beta ${{ github.event.inputs.release }} -username ${{ secrets.STEAM_USER }} -password ${{ secrets.STEAM_PASS }}
           cd ${{ env.GITHUB_WORKSPACE }}
-          mkdir out && mkdir out
+          mkdir out
       - run: nimble install neverwinter -y
       - name: unpack preview keyfile
         if: github.event.inputs.release == 'preview'
